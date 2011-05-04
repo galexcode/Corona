@@ -1,0 +1,23 @@
+using UnityEngine;
+using System.Collections;
+
+public class SpaceEntity : MonoBehaviour {
+
+	protected GameObject obj;
+	public Vector3 velocity;
+	
+	protected SpacePartition sp;
+
+	public void SetSpace(SpacePartition sp) {
+		this.sp = sp;
+	}
+	
+	public GameObject getObj() {
+		return this.obj;	
+	}
+	
+	public void SetObj(GameObject obj) {
+		this.obj = obj;	
+	}
+
+}
