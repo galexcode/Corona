@@ -34,7 +34,7 @@ public class Spawner : MonoBehaviour {
 		ai.SetSpace(sp);
 		
 		// update space partition
-		sp.targets[team].Add(ai);
+		sp.map["targets"][team].Add(ai);
 		
 	}
 }

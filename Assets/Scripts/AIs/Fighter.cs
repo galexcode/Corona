@@ -26,7 +26,7 @@ public class Fighter : TargetableEntity {
 		
 		// get a new target
 		if (!target && this.CanRetarget() && sp != null) {
-			ArrayList enemyTeam = sp.targets[(team + 1) % 2];
+			ArrayList enemyTeam = sp.map["targets"][(team + 1) % 2];
 			if (enemyTeam.Count != 0)
 				target = (TargetableEntity)enemyTeam[0];
 		}
@@ -55,7 +55,14 @@ public class Fighter : TargetableEntity {
 		this.weaponTimer += Time.deltaTime;
 		
 		if (this.weaponTimer > this.weaponCooldown) {
-			Instantiate(this.laser, transform.position, transform.rotation);
+			GameObject obj = (GameObject)Instantiate(this.laser, transform.position, transform.rotation);
+			
+			Laser laser = obj.GetComponent<Laser>();
+			laser.ttl = 5;
+			laser.dmg = 1;
+			laser.velocity = this.velocity;
+			laser.velocity.Normalize();
+			laser.SetObj(obj);
 		}
 		
 	}
