@@ -29,7 +29,12 @@ public class Spawner : MonoBehaviour {
 		
 		// init new ship
 		Fighter ai = obj.GetComponent<Fighter>();
-		ai.team = team;
+		float x = Random.value * 2 - 1;
+		float y = Random.value * 2 - 1;
+		float z = Random.value * 2 - 1;
+		Vector3 dir = new Vector3(x, y, z);
+		
+		ai.Init(team, dir.normalized, 50);
 		ai.SetObj(obj);
 		ai.SetSpace(sp);
 		

@@ -4,7 +4,9 @@ using System.Collections;
 public class SpaceEntity : MonoBehaviour {
 
 	protected GameObject obj;
-	public Vector3 velocity;
+	
+	public Vector3 direction;
+	public float speed;
 	
 	protected SpacePartition sp;
 
