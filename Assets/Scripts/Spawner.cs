@@ -7,6 +7,10 @@ public class Spawner : MonoBehaviour {
 	private SpacePartition sp;
 
 	public GameObject fighter;
+	public GameObject explosion;
+	
+	private float elapsed = 0;
+	private bool exploded = false;
 
 	// Use this for initialization
 	void Start () {
@@ -15,7 +19,15 @@ public class Spawner : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		/*
+		elapsed += Time.deltaTime;
+		if ((int)elapsed % 2 == 0 && !exploded) {
+			Instantiate(explosion, Vector3.zero, Quaternion.identity);
+			exploded = true;
+		} else if ((int)elapsed % 2 != 0) {
+			exploded = false;	
+		}
+		*/
 	}
 	
 	public void SpawnFighter(int team) {

@@ -6,7 +6,7 @@ public class Laser : SpaceEntity {
 	public float ttl;
 	public int dmg;
 	
-	private float length = 0.1f;
+	private float length = 0.5f;
 	
 	private LineRenderer line;
 	private Vector3 lineStart;
@@ -16,12 +16,12 @@ public class Laser : SpaceEntity {
 		this.lineStart = pos;
 		this.ttl = ttl;
 		this.dmg = dmg;
-		this.speed = 5;
+		this.speed = 10;
 		this.direction = dir * this.speed;
 		
 		line = this.GetComponent<LineRenderer>();
 		
-		line.SetWidth(0.01f, 0.01f);
+		line.SetWidth(0.05f, 0.05f);
 		
 		Vector3 end = lineStart + dir * this.length;
 		this.line.SetPosition(0, lineStart);

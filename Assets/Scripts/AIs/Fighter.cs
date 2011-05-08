@@ -18,6 +18,7 @@ public class Fighter : TargetableEntity {
 	public TargetableEntity target;
 	
 	public GameObject laser;
+	public GameObject explosion;
 	public int angleOfAttack;
 	public int dmg;
 	
@@ -27,15 +28,15 @@ public class Fighter : TargetableEntity {
 	// direction should be normalized
 	public void Init(int team, Vector3 direction, int armor) {
 		this.acceleration = 0.1f;
-		this.maxSpeed = 0.3f;
-		this.maxAngle = 1; // radians
+		this.maxSpeed = 2.0f;
+		this.maxAngle = 2; // radians
 		this.weaponCooldown = 1.0f; // seconds
 		this.weaponTimerRNG = 1.0f; // seconds
 		this.direction = direction;
 		this.speed = this.maxSpeed;
 		
-		this.sqrFlyoutRange = 0.2f;
-		this.sqrFlyinRange  = 10.0f;
+		this.sqrFlyoutRange = 10.0f;
+		this.sqrFlyinRange  = 100.0f;
 		
 		this.flyingOut = false;
 		this.flyoutTarget = Vector3.up;
@@ -53,6 +54,11 @@ public class Fighter : TargetableEntity {
 	
 	// Update is called once per frame
 	void Update () {
+		
+		if (this.target && !this.target.Alive()) {
+			this.target.Untarget();
+			this.target = null;
+		}
 		
 		if (this.alive) {
 			
@@ -77,6 +83,9 @@ public class Fighter : TargetableEntity {
 				
 		} else if (this.CanDestroy()) {
 			sp.map["targets"][team].Remove(this);
+			if (this.target)
+				this.target.Untarget();
+			Instantiate(this.explosion, transform.position, transform.rotation);
 			Destroy(this.obj);
 		}
 	}

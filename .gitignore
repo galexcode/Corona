@@ -1,4 +1,2 @@
-Library/cache
-Library/metadata
-Library/previews
-Library/ScriptAssemblies
+.DS_Store
+Library
