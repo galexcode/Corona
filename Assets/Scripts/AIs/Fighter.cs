@@ -24,19 +24,18 @@ public class Fighter : TargetableEntity {
 	
 	private float weaponTimer;
 	
-	
 	// direction should be normalized
 	public void Init(int team, Vector3 direction, int armor) {
-		this.acceleration = 0.1f;
-		this.maxSpeed = 2.0f;
-		this.maxAngle = 2; // radians
+		this.acceleration = 1.0f;
+		this.maxSpeed = 6.0f;
+		this.maxAngle = 1.5f; // radians
 		this.weaponCooldown = 1.0f; // seconds
 		this.weaponTimerRNG = 1.0f; // seconds
 		this.direction = direction;
-		this.speed = this.maxSpeed;
+		this.speed = this.maxSpeed/4;
 		
-		this.sqrFlyoutRange = 10.0f;
-		this.sqrFlyinRange  = 100.0f;
+		this.sqrFlyoutRange = 25.0f;
+		this.sqrFlyinRange  = 300.0f;
 		
 		this.flyingOut = false;
 		this.flyoutTarget = Vector3.up;
@@ -50,6 +49,8 @@ public class Fighter : TargetableEntity {
 		this.shields = 0;
 		this.armor = armor;
 		this.team = team;
+		
+		this.transform.forward = this.direction;
 	}
 	
 	// Update is called once per frame
@@ -79,7 +80,10 @@ public class Fighter : TargetableEntity {
 				this.speed = Mathf.Max(this.speed - this.acceleration * Time.deltaTime, 0);	
 			}
 			
-			transform.Translate(this.direction * this.speed * Time.deltaTime);
+			transform.forward = this.direction;
+			
+			transform.position += this.direction * this.speed * Time.deltaTime;
+			//this.transform.rotation.SetLookRotation(this.direction, this.transform.up);
 				
 		} else if (this.CanDestroy()) {
 			sp.map["targets"][team].Remove(this);
@@ -104,6 +108,7 @@ public class Fighter : TargetableEntity {
 		} else if (sqrdist > this.sqrFlyinRange) {
 			this.flyingOut = false;
 		}
+		
 		if (this.flyingOut) {
 			
 			this.direction = Vector3.RotateTowards(this.direction, this.flyoutTarget, this.maxAngle * Time.deltaTime, 1);
@@ -116,6 +121,7 @@ public class Fighter : TargetableEntity {
 			
 			this.speed = Mathf.Min(this.speed + this.acceleration * Time.deltaTime, this.maxSpeed);	
 		}
+		//transform.Rotate(Quaternion.FromToRotation(prevDir, this.direction).eulerAngles);
 	}
 	
 	// returns an arbitrary normal to the given vector
@@ -134,9 +140,9 @@ public class Fighter : TargetableEntity {
 		if (this.weaponTimer > this.weaponCooldown) {
 			GameObject obj = (GameObject)Instantiate(this.laser, transform.position, transform.rotation);
 			
-			Laser laser = obj.GetComponent<Laser>();
+			Projectile laser = obj.GetComponent<Projectile>();
 			laser.SetObj(obj);
-			laser.Init(transform.position, this.direction.normalized, 1, this.dmg);
+			laser.Init(transform.position, this.direction.normalized, this.dmg, 1.0f);
 			
 			// lame assumption that all weapons hit
 			this.target.TakeHit(this.dmg);

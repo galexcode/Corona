@@ -7,14 +7,22 @@ public class Spawner : MonoBehaviour {
 	private SpacePartition sp;
 
 	public GameObject fighter;
-	public GameObject explosion;
+	public GameObject flakPlatform;
 	
-	private float elapsed = 0;
-	private bool exploded = false;
+	//private float elapsed = 0;
+	//private bool exploded = false;
 
 	// Use this for initialization
 	void Start () {
 		sp = new SpacePartition();
+		
+		// throw down a single platform for testing
+		GameObject obj = (GameObject)Instantiate(flakPlatform);
+		FlakPlatform fp = obj.GetComponent<FlakPlatform>();
+		fp.Init(0);
+		fp.SetObj(obj);
+		fp.SetSpace(sp);
+		
 	}
 	
 	// Update is called once per frame

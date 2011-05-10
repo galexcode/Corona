@@ -48,16 +48,16 @@ public class FreeCamera : MonoBehaviour {
 			
 			// keyboard input
 			if (Input.GetKey(KeyCode.W)) {
-				transform.Translate(transform.forward.normalized * speed);	
+				transform.position += transform.forward.normalized * speed;	
 			}
 			if (Input.GetKey(KeyCode.A)) {
-				transform.Translate(-transform.right.normalized * speed);	
+				transform.position += -transform.right.normalized * speed;	
 			}
 			if (Input.GetKey(KeyCode.S)) {
-				transform.Translate(-transform.forward.normalized * speed);	
+				transform.position += -transform.forward.normalized * speed;	
 			}
 			if (Input.GetKey(KeyCode.D)) {
-				transform.Translate(transform.right.normalized * speed);	
+				transform.position += transform.right.normalized * speed;	
 			}
 			
 			if (axes == RotationAxes.MouseXAndY)
