@@ -23,6 +23,8 @@ public class Spawner : MonoBehaviour {
 		fp.SetObj(obj);
 		fp.SetSpace(sp);
 		
+		sp.map["targets"][0].Add(fp);
+		
 	}
 	
 	// Update is called once per frame

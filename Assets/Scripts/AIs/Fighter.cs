@@ -65,9 +65,9 @@ public class Fighter : TargetableEntity {
 			
 			// get a new target
 			if (!target && this.CanRetarget() && sp != null) {
-				ArrayList enemyTeam = sp.map["targets"][(team + 1) % 2];
-				if (enemyTeam.Count != 0) {
-					target = (TargetableEntity)enemyTeam[0];
+				SpaceEntity se = sp.NearestEnemy(this);
+				if (se != null) {	
+					target = (TargetableEntity)se;
 					target.Target();
 				}
 			}
@@ -142,7 +142,7 @@ public class Fighter : TargetableEntity {
 			
 			Projectile laser = obj.GetComponent<Projectile>();
 			laser.SetObj(obj);
-			laser.Init(transform.position, this.direction.normalized, this.dmg, 1.0f);
+			laser.Init(transform.position, this.direction.normalized, this.dmg, 500);
 			
 			// lame assumption that all weapons hit
 			this.target.TakeHit(this.dmg);

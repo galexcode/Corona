@@ -3,47 +3,43 @@ using System.Collections;
 
 public class Projectile : SpaceEntity {
 
-	public float ttl;
+	public delegate void OnDestroyDelegate(bool hit, Vector3 position);
+
+	private Vector3 startingPosition;
+	public int sqrRange;
 	public int dmg;
 	
-	private float length = 0.5f;
-	
-	private LineRenderer line;
-	private Vector3 lineStart;
+	private OnDestroyDelegate onDestroy;
 	
 	// dir should already be normalized
-	public void Init(Vector3 pos, Vector3 dir, int dmg, float ttl) {
-		this.lineStart = pos;
-		this.ttl = ttl;
+	public void Init(Vector3 pos, Vector3 dir, int dmg, int sqrRange) {
+		this.startingPosition = pos;
+		this.sqrRange = sqrRange;
 		this.dmg = dmg;
-		this.speed = 10;
-		this.direction = dir * this.speed;
+		this.speed = 15;
+		this.direction = dir;
 		
-		line = this.GetComponent<LineRenderer>();
+		this.onDestroy = null;
 		
-		line.SetWidth(0.05f, 0.05f);
-		
-		Vector3 end = lineStart + dir * this.length;
-		this.line.SetPosition(0, lineStart);
-		this.line.SetPosition(1, end);
+		this.transform.forward = dir;
+		this.transform.position = pos;
 	}
 
-	// Use this for initialization
-	void Start () {
-	
+	public void HandleOnDestroy(OnDestroyDelegate onDestroy) {
+		this.onDestroy = onDestroy;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		Vector3 newStart = this.lineStart + this.direction * Time.deltaTime;
-		Vector3 end = newStart + this.direction.normalized * this.length;
 		
-		this.line.SetPosition(0, newStart);
-		this.line.SetPosition(1, end);
-		this.lineStart = newStart;
+		this.transform.position += this.transform.forward * this.speed * Time.deltaTime;
 		
-		ttl -= Time.deltaTime;
-		if (ttl < 0) {
+		if ((this.transform.position - this.startingPosition).sqrMagnitude > this.sqrRange) {
+			if (this.onDestroy != null) {
+				bool hit = true;
+				this.onDestroy(hit, this.transform.position);
+			}
+			
 			Destroy(this.obj);	
 		}
 	}

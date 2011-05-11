@@ -2,8 +2,6 @@ using UnityEngine;
 using System.Collections;
 
 public class TargetableEntity : SpaceEntity {
-
-	public int team;
 	
 	public int shields = 0;
 	public int armor;

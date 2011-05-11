@@ -9,6 +9,8 @@ public class SpaceEntity : MonoBehaviour {
 	public float speed;
 	
 	protected SpacePartition sp;
+	
+	public int team;
 
 	public void SetSpace(SpacePartition sp) {
 		this.sp = sp;

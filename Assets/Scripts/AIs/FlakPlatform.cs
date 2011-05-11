@@ -52,9 +52,9 @@ public class FlakPlatform : TargetableEntity {
 			
 			// get a new target
 			if (!targetTop && this.CanRetarget() && sp != null) {
-				ArrayList enemyTeam = sp.map["targets"][(team + 1) % 2];
-				if (enemyTeam.Count != 0) {
-					targetTop = (TargetableEntity)enemyTeam[0];
+				SpaceEntity se = sp.NearestEnemy(this);
+				if (se != null) {	
+					targetTop = (TargetableEntity)se;
 					targetTop.Target();
 				}
 			}
@@ -76,7 +76,18 @@ public class FlakPlatform : TargetableEntity {
 			//transform.position += this.direction * this.speed * Time.deltaTime;
 			//this.transform.rotation.SetLookRotation(this.direction, this.transform.up);
 				
+		} else if (this.CanDestroy()) {
+			sp.map["targets"][team].Remove(this);
+			if (this.targetTop)
+				this.targetTop.Untarget();
+			Instantiate(this.explosion, transform.position, transform.rotation);
+			Destroy(this.obj);
 		}
+	}
+	
+	private void OnProjectileDestroy(bool hit, Vector3 position) {
+		// create smoke cloud
+		Instantiate(this.flakExplosion, position, Quaternion.identity);
 	}
 	
 	private void Fire() {
@@ -86,10 +97,12 @@ public class FlakPlatform : TargetableEntity {
 		if (this.weaponTimer > this.weaponCooldown) {
 			GameObject obj = (GameObject)Instantiate(this.flakProjectile, transform.position, Quaternion.identity);
 			
+			//Projectile.OnDestroy destroy = this.OnDestroy;
 			
 			Projectile flak = obj.GetComponent<Projectile>();
 			flak.SetObj(obj);
-			flak.Init(transform.position, this.topTurret.transform.up.normalized, this.dmg, 3.0f);
+			flak.Init(transform.position, this.topTurret.transform.up.normalized, this.dmg, 1000);
+			flak.HandleOnDestroy(this.OnProjectileDestroy);
 			
 			
 			// lame assumption that all weapons hit
