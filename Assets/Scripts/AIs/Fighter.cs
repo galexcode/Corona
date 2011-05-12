@@ -145,11 +145,13 @@ public class Fighter : TargetableEntity {
 			laser.Init(transform.position, this.direction.normalized, this.dmg, 500);
 			
 			// lame assumption that all weapons hit
+			/*
 			this.target.TakeHit(this.dmg);
 			if (!this.target.Alive()) {
 				this.target.Untarget();
 				this.target = null;
 			}
+			*/
 			
 			weaponTimer = Random.value * this.weaponTimerRNG;
 		}
@@ -157,6 +159,17 @@ public class Fighter : TargetableEntity {
 	
 	private bool CanRetarget() {
 		return (int)(Random.value * (10000 * Time.deltaTime)) == 0;
+	}
+	
+	private void OnCollisionEnter(Collision collisionInfo) {
+		Damager d = collisionInfo.gameObject.GetComponent<Damager>();
+		if (d != null) {
+			Debug.Log("Took a hit");
+			this.TakeHit(d.damage);
+			if (d.destroyOnCollide)
+				Destroy(collisionInfo.gameObject);
+		}
+		//this.TakeHit(this.armor); // BOOM BABY!
 	}
 
 }

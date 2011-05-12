@@ -17,6 +17,7 @@ public class Spawner : MonoBehaviour {
 		sp = new SpacePartition();
 		
 		// throw down a single platform for testing
+		/*
 		GameObject obj = (GameObject)Instantiate(flakPlatform);
 		FlakPlatform fp = obj.GetComponent<FlakPlatform>();
 		fp.Init(0);
@@ -24,6 +25,7 @@ public class Spawner : MonoBehaviour {
 		fp.SetSpace(sp);
 		
 		sp.map["targets"][0].Add(fp);
+		*/
 		
 	}
 	
@@ -43,10 +45,12 @@ public class Spawner : MonoBehaviour {
 	public void SpawnFighter(int team) {
 		GameObject obj; 
 		
+		Vector3 pos = new Vector3(Random.value * 20 - 10, Random.value * 20 - 10, Random.value * 20 - 10);
+		
 		if (team == 0) {
-			obj = (GameObject)Instantiate(fighter, Vector3.zero, Quaternion.identity);
+			obj = (GameObject)Instantiate(fighter, pos, Quaternion.identity);
 		} else {
-			obj = (GameObject)Instantiate(fighter, Vector3.one, Quaternion.identity);	
+			obj = (GameObject)Instantiate(fighter, pos, Quaternion.identity);	
 		}
 		
 		// init new ship
