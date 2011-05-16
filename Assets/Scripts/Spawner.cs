@@ -17,7 +17,7 @@ public class Spawner : MonoBehaviour {
 		sp = new SpacePartition();
 		
 		// throw down a single platform for testing
-		/*
+		
 		GameObject obj = (GameObject)Instantiate(flakPlatform);
 		FlakPlatform fp = obj.GetComponent<FlakPlatform>();
 		fp.Init(0);
@@ -25,7 +25,7 @@ public class Spawner : MonoBehaviour {
 		fp.SetSpace(sp);
 		
 		sp.map["targets"][0].Add(fp);
-		*/
+		
 		
 	}
 	

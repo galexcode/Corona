@@ -85,9 +85,16 @@ public class FlakPlatform : TargetableEntity {
 		}
 	}
 	
-	private void OnProjectileDestroy(bool hit, Vector3 position) {
+	private void OnProjectileDestroy(Vector3 position) {
 		// create smoke cloud
 		Instantiate(this.flakExplosion, position, Quaternion.identity);
+	}
+	
+	private void OnProjectileCollide(Vector3[] points, GameObject o, Projectile p) {
+		if (o != this.getObj()) {
+			Instantiate(this.flakExplosion, points[0], Quaternion.identity);
+			Destroy(p.getObj());
+		}
 	}
 	
 	private void Fire() {
@@ -103,14 +110,7 @@ public class FlakPlatform : TargetableEntity {
 			flak.SetObj(obj);
 			flak.Init(transform.position, this.topTurret.transform.up.normalized, this.dmg, 1000);
 			flak.HandleOnDestroy(this.OnProjectileDestroy);
-			
-			
-			// lame assumption that all weapons hit
-			this.targetTop.TakeHit(this.dmg);
-			if (!this.targetTop.Alive()) {
-				this.targetTop.Untarget();
-				this.targetTop = null;
-			}
+			flak.HandleOnCollide(this.OnProjectileCollide);
 			
 			weaponTimer = Random.value * this.weaponTimerRNG;
 		}

@@ -35,7 +35,7 @@ public class Fighter : TargetableEntity {
 		this.speed = this.maxSpeed/4;
 		
 		this.sqrFlyoutRange = 25.0f;
-		this.sqrFlyinRange  = 300.0f;
+		this.sqrFlyinRange  = 500.0f;
 		
 		this.flyingOut = false;
 		this.flyoutTarget = Vector3.up;
@@ -43,7 +43,7 @@ public class Fighter : TargetableEntity {
 		this.target = null;
 		
 		this.weaponTimer = 0.0f;
-		this.angleOfAttack = 10; // degrees
+		this.angleOfAttack = 1; // degrees
 		this.dmg = 5;
 		
 		this.shields = 0;
@@ -82,6 +82,7 @@ public class Fighter : TargetableEntity {
 			
 			transform.forward = this.direction;
 			
+			//transform.Translate(this.direction * this.speed * Time.deltaTime);
 			transform.position += this.direction * this.speed * Time.deltaTime;
 			//this.transform.rotation.SetLookRotation(this.direction, this.transform.up);
 				
@@ -143,6 +144,7 @@ public class Fighter : TargetableEntity {
 			Projectile laser = obj.GetComponent<Projectile>();
 			laser.SetObj(obj);
 			laser.Init(transform.position, this.direction.normalized, this.dmg, 500);
+			laser.HandleOnCollide(this.OnProjectileCollide);
 			
 			// lame assumption that all weapons hit
 			/*
@@ -161,15 +163,16 @@ public class Fighter : TargetableEntity {
 		return (int)(Random.value * (10000 * Time.deltaTime)) == 0;
 	}
 	
-	private void OnCollisionEnter(Collision collisionInfo) {
-		Damager d = collisionInfo.gameObject.GetComponent<Damager>();
-		if (d != null) {
-			Debug.Log("Took a hit");
-			this.TakeHit(d.damage);
-			if (d.destroyOnCollide)
-				Destroy(collisionInfo.gameObject);
+	private void OnProjectileCollide(Vector3[] points, GameObject o, Projectile p) {
+		if (o != this.getObj()) {
+			//Instantiate(this.flakExplosion, c.contacts[0].point, Quaternion.identity);
+			
+			Destroy(p.getObj());
 		}
-		//this.TakeHit(this.armor); // BOOM BABY!
+	}
+	
+	private void OnCollisionEnter(Collision c) {
+		Debug.Log(c.contacts[0].point);
 	}
 
 }
