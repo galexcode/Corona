@@ -11,11 +11,9 @@ public class FlakPlatform : TargetableEntity {
 	public float weaponTimerRNG; // seconds
 	
 	public GameObject flakProjectile;
-	public GameObject flakExplosion;
 	public GameObject explosion;
 	
 	public int angleOfAttack;
-	public int dmg;
 	
 	private float weaponTimer;
 	
@@ -27,7 +25,6 @@ public class FlakPlatform : TargetableEntity {
 		
 		this.weaponTimer = 0.0f;
 		this.angleOfAttack = 10; // degrees
-		this.dmg = 1;
 		
 		this.targetTop = null;
 		this.weaponTimer = 0;
@@ -85,6 +82,7 @@ public class FlakPlatform : TargetableEntity {
 		}
 	}
 	
+	/*
 	private void OnProjectileDestroy(Vector3 position) {
 		// create smoke cloud
 		Instantiate(this.flakExplosion, position, Quaternion.identity);
@@ -96,6 +94,7 @@ public class FlakPlatform : TargetableEntity {
 			Destroy(p.getObj());
 		}
 	}
+	*/
 	
 	private void Fire() {
 		// check to see if weapons are ready first
@@ -108,9 +107,9 @@ public class FlakPlatform : TargetableEntity {
 			
 			Projectile flak = obj.GetComponent<Projectile>();
 			flak.SetObj(obj);
-			flak.Init(transform.position, this.topTurret.transform.up.normalized, this.dmg, 1000);
-			flak.HandleOnDestroy(this.OnProjectileDestroy);
-			flak.HandleOnCollide(this.OnProjectileCollide);
+			flak.Init(this.getObj(), transform.position, this.topTurret.transform.up.normalized);
+			//flak.HandleOnDestroy(this.OnProjectileDestroy);
+			//flak.HandleOnCollide(this.OnProjectileCollide);
 			
 			weaponTimer = Random.value * this.weaponTimerRNG;
 		}
@@ -119,6 +118,10 @@ public class FlakPlatform : TargetableEntity {
 	private bool CanRetarget() {
 		return true;
 		//return (int)(Random.value * (10000 * Time.deltaTime)) == 0;
+	}
+	
+	private void OnCollisionEnter(Collision c) {
+		Debug.Log(c.contacts[0].point);
 	}
 	
 }

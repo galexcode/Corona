@@ -28,16 +28,16 @@ public class SpacePartition {
 		
 		ArrayList targets = map["targets"][(e.team + 1) % 2];
 		
-		if (targets.Count != 0) {
+		if (targets.Count != 0 && ((TargetableEntity)targets[0]).Alive()) {
 			Vector3 pos = e.getObj().transform.position;
 			
 			SpaceEntity closestTarget = (SpaceEntity)targets[0];
 			float closestSqrDist = (closestTarget.getObj().transform.position - pos).sqrMagnitude;
 			
 			for (int i = 1; i < targets.Count; ++i) {
-				SpaceEntity target = (SpaceEntity)targets[i];
+				TargetableEntity target = (TargetableEntity)targets[i];
 				float sqrDist = (target.getObj().transform.position - pos).sqrMagnitude;
-				if (sqrDist < closestSqrDist) {
+				if (sqrDist < closestSqrDist && target.Alive()) {
 					closestTarget = target;
 					closestSqrDist = sqrDist;
 				}	

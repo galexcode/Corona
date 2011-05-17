@@ -29,16 +29,30 @@ public class WeakLaser : Projectile {
 		lineEnd = lineStart + transform.forward;
 		this.line.SetPosition(0, lineStart);
 		this.line.SetPosition(1, lineEnd);
+		
+		if ((this.transform.position - this.startingPosition).sqrMagnitude > this.sqrRange) {
+			Destroy(this.obj);	
+		}
 	}
 	
 	void OnTriggerEnter(Collider c) {
-		RaycastHit rh = new RaycastHit();
-		if (Physics.Linecast(lineStart, lineEnd, out rh)) {
-			if (this.onCollide != null) {
-				Vector3[] points = {rh.point};
+		
+		// dont collide with creator
+		if (c.gameObject != this.creator) {
+			
+			RaycastHit rh = new RaycastHit();
+			if (Physics.Linecast(lineStart, lineEnd, out rh)) {
+				
+				// cause damage
+				TargetableEntity e = rh.collider.gameObject.GetComponent<TargetableEntity>();
+				if (e != null) {
+					e.TakeHit(this.dmg);	
+				}
+				
+				// create sparks
 				GameObject blast = (GameObject)Instantiate(laserBlast, rh.point, Random.rotation);
 				blast.transform.parent = c.gameObject.transform;
-				this.onCollide(points, c.gameObject, (Projectile)this);
+				Destroy(this.obj);
 			}
 		}	
 	}

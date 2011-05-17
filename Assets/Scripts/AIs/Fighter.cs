@@ -143,8 +143,8 @@ public class Fighter : TargetableEntity {
 			
 			Projectile laser = obj.GetComponent<Projectile>();
 			laser.SetObj(obj);
-			laser.Init(transform.position, this.direction.normalized, this.dmg, 500);
-			laser.HandleOnCollide(this.OnProjectileCollide);
+			laser.Init(this.getObj(), transform.position, this.direction.normalized);
+			//laser.HandleOnCollide(this.OnProjectileCollide);
 			
 			// lame assumption that all weapons hit
 			/*
@@ -160,9 +160,11 @@ public class Fighter : TargetableEntity {
 	}
 	
 	private bool CanRetarget() {
-		return (int)(Random.value * (10000 * Time.deltaTime)) == 0;
+		return true;
+		//return (int)(Random.value * (10000 * Time.deltaTime)) == 0;
 	}
 	
+	/*
 	private void OnProjectileCollide(Vector3[] points, GameObject o, Projectile p) {
 		if (o != this.getObj()) {
 			//Instantiate(this.flakExplosion, c.contacts[0].point, Quaternion.identity);
@@ -170,6 +172,7 @@ public class Fighter : TargetableEntity {
 			Destroy(p.getObj());
 		}
 	}
+	*/
 	
 	private void OnCollisionEnter(Collision c) {
 		Debug.Log(c.contacts[0].point);
