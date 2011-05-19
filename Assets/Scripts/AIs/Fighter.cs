@@ -143,7 +143,8 @@ public class Fighter : TargetableEntity {
 			
 			Projectile laser = obj.GetComponent<Projectile>();
 			laser.SetObj(obj);
-			laser.Init(this.getObj(), transform.position, this.direction.normalized);
+			Vector3 dir = SpaceEntity.FiringDirection(this.transform.position, this.target.transform.position, this.target.direction * this.target.speed, laser.speed);
+			laser.Init(this.getObj(), transform.position, dir); // this.direction.normalized);
 			//laser.HandleOnCollide(this.OnProjectileCollide);
 			
 			// lame assumption that all weapons hit
