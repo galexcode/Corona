@@ -35,7 +35,7 @@ public class Flak : Projectile {
 		Instantiate(flakCloud, pos, Random.rotation);
 		Destroy(this.obj);
 		
-		RaycastHit[] rha = Physics.SphereCastAll(pos, explodeRadius, Vector3.one);
+		RaycastHit[] rha = Physics.SphereCastAll(pos, explodeRadius, Vector3.one, 1);
 		foreach (RaycastHit rh in rha) {
 			// cause damage
 			TargetableEntity e = rh.collider.gameObject.GetComponent<TargetableEntity>();

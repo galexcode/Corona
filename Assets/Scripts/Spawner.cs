@@ -4,16 +4,17 @@ using System.ComponentModel;
 
 public class Spawner : MonoBehaviour {
 
-	private SpacePartition sp;
+	public SpacePartition sp;
 
 	public GameObject fighter;
 	public GameObject flakPlatform;
 	
 	//private float elapsed = 0;
-	//private bool exploded = false;
+	//private bool exploded = false
 
 	// Use this for initialization
 	void Start () {
+		
 		sp = new SpacePartition();
 		
 		// throw down a single platform for testing
@@ -23,9 +24,7 @@ public class Spawner : MonoBehaviour {
 		fp.Init(0);
 		fp.SetObj(obj);
 		fp.SetSpace(sp);
-		
-		sp.map["targets"][0].Add(fp);
-		
+		fp.AttachToTargettingSystem();
 		
 	}
 	
@@ -63,9 +62,7 @@ public class Spawner : MonoBehaviour {
 		ai.Init(team, dir.normalized, 50);
 		ai.SetObj(obj);
 		ai.SetSpace(sp);
-		
-		// update space partition
-		sp.map["targets"][team].Add(ai);
+		ai.AttachToTargettingSystem();
 		
 	}
 }

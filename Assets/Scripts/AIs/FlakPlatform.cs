@@ -23,12 +23,18 @@ public class FlakPlatform : TargetableEntity {
 	private GameObject bottomTurret = null;
 	
 	public float angle;
+	
+	private float range;
 
 	public void Init(int team) {
 		this.armor = 100;	
 		this.team = team;
+		//this.getObj().layer = 31 - team;
 		
 		this.angleOfAttack = 10; // degrees
+		
+		Projectile p = flakProjectile.GetComponent<Projectile>();
+		this.range = Mathf.Sqrt(p.sqrRange);
 		
 		this.targetTop = null;
 		this.targetBottom = null;
@@ -48,11 +54,11 @@ public class FlakPlatform : TargetableEntity {
 	// Update is called once per frame
 	void Update () {
 		
-		if (this.targetTop && !this.targetTop.Alive()) {
+		if (this.targetTop && (!this.targetTop.Alive() || this.TargetTopOutOfRange())) {
 			this.targetTop.Untarget();
 			this.targetTop = null;
 		}
-		if (this.targetBottom && !this.targetBottom.Alive()) {
+		if (this.targetBottom && (!this.targetBottom.Alive() || this.TargetBottomOutOfRange())) {
 			this.targetBottom.Untarget();
 			this.targetBottom = null;
 		}
@@ -61,14 +67,14 @@ public class FlakPlatform : TargetableEntity {
 			
 			// get a new target
 			if (!targetTop && this.CanRetarget() && sp != null) {
-				SpaceEntity se = sp.NearestEnemy(this);
+				SpaceEntity se = sp.NearestEnemyInRange(this, this.range);
 				if (se != null) {	
 					targetTop = (TargetableEntity)se;
 					targetTop.Target();
 				}
 			}
 			if (!this.targetBottom && this.CanRetarget() && sp != null) {
-				SpaceEntity se = sp.NearestEnemy(this);
+				SpaceEntity se = sp.NearestEnemyInRange(this, this.range);
 				if (se != null) {	
 					this.targetBottom = (TargetableEntity)se;
 					this.targetBottom.Target();
@@ -93,7 +99,7 @@ public class FlakPlatform : TargetableEntity {
 				
 				Vector3 dir = this.targetBottom.transform.position - transform.position;
 				//Vector3 dir = this.targetTop.getObj().transform.position - transform.position;
-				if (Mathf.Acos(Vector3.Dot(dir.normalized, Vector3.up)) <= -Mathf.PI / 2) {
+				if (Mathf.Acos(Vector3.Dot(dir.normalized, -Vector3.up)) <= Mathf.PI / 2) {
 					this.bottomTurret.transform.up = dir.normalized;
 				//float sqrdist = dir.sqrMagnitude;
 				
@@ -115,6 +121,17 @@ public class FlakPlatform : TargetableEntity {
 			Instantiate(this.explosion, transform.position, transform.rotation);
 			Destroy(this.obj);
 		}
+	}
+	
+	private bool TargetTopOutOfRange() {
+		return this.TargetOutOfRange(this.targetTop);
+	}
+	private bool TargetBottomOutOfRange() {
+		return this.TargetOutOfRange(this.targetBottom);
+	}
+	// simple distance check
+	private bool TargetOutOfRange(TargetableEntity t) {
+		return (t.getObj().transform.position - transform.position).sqrMagnitude > range * range;
 	}
 	
 	/*
@@ -167,7 +184,7 @@ public class FlakPlatform : TargetableEntity {
 			//flak.HandleOnDestroy(this.OnProjectileDestroy);
 			//flak.HandleOnCollide(this.OnProjectileCollide);
 			
-			weaponTimerTop = Random.value * this.weaponTimerRNG;
+			weaponTimerBottom = Random.value * this.weaponTimerRNG;
 		}
 	}
 	

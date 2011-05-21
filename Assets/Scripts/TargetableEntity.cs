@@ -10,6 +10,15 @@ public class TargetableEntity : SpaceEntity {
 	
 	public int targeters = 0;
 	
+	public void AttachToTargettingSystem() {
+		// insert into targetting system
+		if (this.sp == null)
+			this.sp = GameObject.Find("GameController").GetComponent<Spawner>().sp;
+		
+		this.sp.map["targets"][team].Add(this);
+		
+	}
+	
 	public void Target() {
 		++targeters;
 	}

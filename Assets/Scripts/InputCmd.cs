@@ -7,7 +7,7 @@ public class InputCmd : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		this.cam = GameObject.Find("Camera");
+		this.cam = GameObject.Find("Player");
 	}
 	
 	// Update is called once per frame

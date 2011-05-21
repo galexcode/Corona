@@ -34,6 +34,8 @@ public class Fighter : TargetableEntity {
 		this.direction = direction;
 		this.speed = this.maxSpeed/4;
 		
+		//this.getObj().layer = 31 - team;
+		
 		this.sqrFlyoutRange = 25.0f;
 		this.sqrFlyinRange  = 500.0f;
 		

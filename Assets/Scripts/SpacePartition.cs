@@ -47,4 +47,28 @@ public class SpacePartition {
 		return null;
 	}
 	
+	public RaycastHit[] ObjectsInRange(Vector3 pos, float range) {
+		return Physics.SphereCastAll(pos, range, Vector3.one, 1);
+	}
+	
+	public TargetableEntity NearestEnemyInRange(SpaceEntity e, float range) {
+		Vector3 pos = e.getObj().transform.position;
+		RaycastHit[] rha = this.ObjectsInRange(pos, range);
+		
+		TargetableEntity closestTarget = null;
+		float closestSqrDist = Mathf.Infinity;
+		foreach (RaycastHit rh in rha) {
+			TargetableEntity poss = rh.collider.gameObject.GetComponent<TargetableEntity>();
+			if (poss != null && poss.team != e.team) {
+				float sqrDist = (rh.transform.position - pos).sqrMagnitude;
+				if (sqrDist < closestSqrDist && poss.Alive()) {
+					closestTarget = poss;
+					closestSqrDist = sqrDist;
+				}
+			}
+		}
+		//Debug.Log(closestTarget);
+		return closestTarget;
+	}
+	
 }
